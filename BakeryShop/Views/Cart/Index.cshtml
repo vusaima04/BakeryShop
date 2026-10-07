@@ -1,0 +1,49 @@
+﻿@model List<BakeryShop.Models.CartItem>
+
+<div class="container my-5">
+    <h2 class="mb-4">Giỏ hàng của bạn</h2>
+
+    @if (!Model.Any())
+    {
+        <p class="text-muted">Giỏ hàng đang trống.</p>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Tiếp tục mua sắm</a>
+    }
+    else
+    {
+        <div class="card shadow-sm border-0 p-4" style="border-radius: 12px;">
+            <table class="table align-middle mb-0">
+                <thead>
+                    <tr class="text-muted" style="border-bottom: 2px solid var(--color-primary);">
+                        <th>Sản phẩm</th>
+                        <th>Giá</th>
+                        <th>Số lượng</th>
+                        <th>Thành tiền</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="fw-semibold">@item.Product?.Name</td>
+                            <td>@item.Product?.Price.ToString("N0") đ</td>
+                            <td>@item.Quantity</td>
+                            <td class="text-danger fw-bold">@((item.Product?.Price * item.Quantity)?.ToString("N0")) đ</td>
+                            <td>
+                                <form asp-action="Remove" asp-controller="Cart" method="post">
+                                    <input type="hidden" name="id" value="@item.Id" />
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Xóa</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mt-4">
+            <h4>Tổng cộng: <span class="text-danger">@Model.Sum(i => i.Product?.Price * i.Quantity).Value.ToString("N0") đ</span></h4>
+            <a asp-controller="Order" asp-action="Checkout" class="btn btn-primary btn-lg">Tiến hành đặt hàng</a>
+        </div>
+    }
+</div>

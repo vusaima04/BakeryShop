@@ -1,0 +1,24 @@
+﻿@model BakeryShop.Models.Order
+
+<div class="text-center py-5">
+    <h1 class="text-success">Đặt hàng thành công!</h1>
+    <p class="lead">Mã đơn hàng của bạn: <strong>#@Model.Id</strong></p>
+</div>
+
+<div class="container">
+    <h4>Chi tiết đơn hàng</h4>
+    <ul class="list-group mb-3">
+        @foreach (var detail in Model.OrderDetails)
+        {
+            <li class="list-group-item d-flex justify-content-between">
+                <span>@detail.Product?.Name x @detail.Quantity</span>
+                <span>@((detail.UnitPrice * detail.Quantity).ToString("N0")) đ</span>
+            </li>
+        }
+    </ul>
+    <h5>Tổng cộng: @Model.TotalAmount.ToString("N0") đ</h5>
+    <p>Giao đến: @Model.DeliveryAddress</p>
+    <p>Ngày nhận: @Model.ReceiveDate.ToString("dd/MM/yyyy")</p>
+
+    <a asp-controller="Home" asp-action="Index" class="btn btn-primary mt-3">Tiếp tục mua sắm</a>
+</div>

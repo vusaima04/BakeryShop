@@ -1,0 +1,30 @@
+﻿@model List<BakeryShop.Models.Product>
+
+<div class="text-center py-5" style="background-color: #fdf6f0;">
+    <h1 class="display-4">BakeryShop</h1>
+    <p class="lead">Bánh ngọt kiểu Pháp, hương vị Việt Nam</p>
+</div>
+
+<div class="container my-5">
+    <h2 class="text-center mb-4">Menu bánh</h2>
+    <div class="row g-4">
+        @foreach (var product in Model)
+        {
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm">
+                    <img src="@product.ImageUrl" class="card-img-top" alt="@product.Name" style="height: 220px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">@product.Name</h5>
+                        <p class="card-text text-muted">@product.Description</p>
+                        <p class="card-text"><small class="text-muted">Size: @product.Size</small></p>
+                        <p class="fw-bold text-danger">@product.Price.ToString("N0") đ</p>
+                        <form asp-action="Add" asp-controller="Cart" method="post">
+                            <input type="hidden" name="productId" value="@product.Id" />
+                            <button type="submit" class="btn btn-warning w-100">Thêm vào giỏ</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,103 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+/* ==== Import font từ Google Fonts ==== */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Montserrat:wght@400;500;600&display=swap');
+
+/* ==== Biến màu dùng chung (CSS Variables) ==== */
+:root {
+    --color-primary: #bc9669; /* Vàng nâu ấm - màu chủ đạo Artemis */
+    --color-primary-dark: #9c7a52; /* Đậm hơn, dùng khi hover */
+    --color-cream: #fdf8f3; /* Nền kem nhạt */
+    --color-text: #3a3229; /* Màu chữ chính, nâu đậm thay vì đen thui */
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    color: var(--color-text);
+    background-color: var(--color-cream);
+}
+
+h1, h2, h3, h4, .navbar-brand {
+    font-family: 'Playfair Display', serif;
+    color: var(--color-text);
+}
+
+/* ==== Nút bấm dùng màu chủ đạo thay vì màu xanh mặc định Bootstrap ==== */
+.btn-primary, .btn-warning, .btn-success {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: white;
+}
+
+    .btn-primary:hover, .btn-warning:hover, .btn-success:hover {
+        background-color: var(--color-primary-dark);
+        border-color: var(--color-primary-dark);
+    }
+
+/* ==== Link dùng màu chủ đạo ==== */
+a {
+    color: var(--color-primary);
+}
+
+    a:hover {
+        color: var(--color-primary-dark);
+    }
+/* ==== Card sản phẩm: bo góc mềm + hiệu ứng hover ==== */
+.card {
+    border: none;
+    border-radius: 12px;
+    overflow: hidden; /* Đảm bảo ảnh bên trong cũng bị bo góc theo card */
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+    .card:hover {
+        transform: translateY(-6px); /* Nâng card lên nhẹ khi rê chuột */
+        box-shadow: 0 12px 24px rgba(188, 150, 105, 0.25); /* Đổ bóng màu thương hiệu, mờ nhạt */
+    }
+
+.card-img-top {
+    transition: transform 0.4s ease;
+}
+
+.card:hover .card-img-top {
+    transform: scale(1.05); /* Ảnh phóng to nhẹ khi hover, tạo cảm giác sống động */
+}
+/* ==== Đồng bộ style cho các trang Identity (Login, Register...) ==== */
+.form-floating,
+form .form-control {
+    border-radius: 8px;
+}
+
+form .btn-primary {
+    border-radius: 8px;
+    padding: 10px 0;
+}
+
+/* Khung chứa form đăng nhập/đăng ký cho gọn, có viền/bóng nhẹ */
+main .row .col-md-4,
+main .row .col-md-6 {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
