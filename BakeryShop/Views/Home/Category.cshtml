@@ -1,0 +1,25 @@
+﻿@model BakeryShop.Models.Category
+
+<div class="container my-5">
+    <h2 class="text-center mb-5">@Model.Name</h2>
+
+    @if (!Model.Products.Any())
+    {
+        <p class="text-center text-muted">Chưa có sản phẩm nào trong danh mục này.</p>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var product in Model.Products)
+            {
+                <div class="col-md-4">
+                    <partial name="_ProductCard" model="product" />
+                </div>
+            }
+        </div>
+    }
+
+    <div class="text-center mt-5">
+        <a asp-action="Menu" class="btn btn-primary">Xem tất cả</a>
+    </div>
+</div>
