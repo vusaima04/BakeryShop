@@ -12,14 +12,6 @@ html {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
-html {
-  position: relative;
-  min-height: 100%;
-}
-
-body {
-  margin-bottom: 60px;
-}
 /* ==== Import font từ Google Fonts ==== */
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Montserrat:wght@400;500;600&display=swap');
 
@@ -92,6 +84,14 @@ form .btn-primary {
     border-radius: 8px;
     padding: 10px 0;
 }
+/* Khung chứa form đăng nhập/đăng ký: chỉ áp dụng trong khu vực Identity */
+.identity-area .row .col-md-4,
+.identity-area .row .col-md-6 {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
 
 /* Khung chứa form đăng nhập/đăng ký cho gọn, có viền/bóng nhẹ */
 main .row .col-md-4,
@@ -101,3 +101,139 @@ main .row .col-md-6 {
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
+.topbar {
+    background-color: var(--color-primary);
+    color: white;
+    font-size: 0.9rem;
+}
+/* Ô danh mục trên trang chủ */
+.category-tile {
+    display: block;
+    text-decoration: none;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+    .category-tile:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 12px 24px rgba(188, 150, 105, 0.25);
+    }
+
+    .category-tile img {
+        width: 100%;
+        height: 260px;
+        object-fit: cover;
+        display: block;
+    }
+
+.category-tile-label {
+    background-color: var(--color-text);
+    color: white;
+    text-align: center;
+    padding: 1rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+/* Ô combo trên trang chủ */
+.combo-tile {
+    display: block;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+    .combo-tile img {
+        width: 100%;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.4s ease;
+    }
+
+    .combo-tile:hover img {
+        transform: scale(1.05);
+    }
+
+.combo-tile-lg img {
+    height: 320px;
+}
+
+.combo-tile-sm img {
+    height: 220px;
+}
+
+/* Ảnh phần giới thiệu */
+.about-img {
+    width: 100%;
+    height: 100%;
+    min-height: 320px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+/* ==== Footer ==== */
+.site-footer {
+    background-color: var(--color-text);
+    color: #f3ebe0;
+    margin-top: 4rem;
+}
+
+    .site-footer h5 {
+        color: var(--color-primary);
+        margin-bottom: 1rem;
+    }
+
+    .site-footer a {
+        color: #f3ebe0;
+        text-decoration: none;
+    }
+
+        .site-footer a:hover {
+            color: var(--color-primary);
+        }
+
+.footer-info li {
+    margin-bottom: 0.75rem;
+}
+
+.footer-info i {
+    color: var(--color-primary);
+    margin-right: 0.5rem;
+}
+
+.footer-social a {
+    font-size: 1.8rem;
+    margin-right: 1rem;
+}
+
+.footer-map iframe {
+    width: 100%;
+    height: 220px;
+    border: 0;
+    border-radius: 12px;
+}
+
+.footer-bottom {
+    background-color: var(--color-primary);
+    color: white;
+    text-align: center;
+    padding: 0.75rem 0;
+}
+
+.footer-bottom a {
+        color: white;
+        text-decoration: underline;
+}
+.site-footer a,
+.site-footer a:visited,
+.footer-info a,
+.footer-social a {
+    color: #f3ebe0;
+}
+
+    .site-footer a:hover,
+    .footer-social a:hover {
+        color: var(--color-primary);
+    }

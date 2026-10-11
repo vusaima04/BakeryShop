@@ -18,8 +18,10 @@ namespace BakeryShop.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var products = await _context.Products.ToListAsync();
-            return View(products);
+            ViewBag.Categories = await _context.Categories.ToListAsync();
+
+            var featured = await _context.Products.Take(4).ToListAsync();
+            return View(featured);
         }
 
         public IActionResult Privacy()

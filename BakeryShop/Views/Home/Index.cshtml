@@ -1,30 +1,122 @@
 ﻿@model List<BakeryShop.Models.Product>
+@{
+    var categories = (ViewBag.Categories as List<BakeryShop.Models.Category>) ?? new List<BakeryShop.Models.Category>();
+}
 
-<div class="text-center py-5" style="background-color: #fdf6f0;">
-    <h1 class="display-4">BakeryShop</h1>
-    <p class="lead">Bánh ngọt kiểu Pháp, hương vị Việt Nam</p>
-</div>
-
-<div class="container my-5">
-    <h2 class="text-center mb-4">Menu bánh</h2>
-    <div class="row g-4">
-        @foreach (var product in Model)
-        {
-            <div class="col-md-4">
-                <div class="card h-100 shadow-sm">
-                    <img src="@product.ImageUrl" class="card-img-top" alt="@product.Name" style="height: 220px; object-fit: cover;">
-                    <div class="card-body">
-                        <h5 class="card-title">@product.Name</h5>
-                        <p class="card-text text-muted">@product.Description</p>
-                        <p class="card-text"><small class="text-muted">Size: @product.Size</small></p>
-                        <p class="fw-bold text-danger">@product.Price.ToString("N0") đ</p>
-                        <form asp-action="Add" asp-controller="Cart" method="post">
-                            <input type="hidden" name="productId" value="@product.Id" />
-                            <button type="submit" class="btn btn-warning w-100">Thêm vào giỏ</button>
-                        </form>
-                    </div>
+<!-- PHẦN 1: SLIDER -->
+<div id="heroCarousel" class="carousel slide mb-5" data-bs-ride="carousel" style="border-radius: 12px; overflow: hidden;">
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active"></button>
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1"></button>
+    </div>
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <div class="d-flex align-items-center justify-content-center text-white text-center"
+                 style="height: 420px; background-color: var(--color-text);">
+                <div>
+                    <h1 class="display-3 text-white">BÁNH NHỎ GỌN</h1>
+                    <p class="fs-4">Trọn yêu thương</p>
+                    <a asp-action="Menu" class="btn btn-primary btn-lg mt-3">Đặt hàng ngay</a>
                 </div>
             </div>
-        }
+        </div>
+        <div class="carousel-item">
+            <div class="d-flex align-items-center justify-content-center text-white text-center"
+                 style="height: 420px; background-color: var(--color-primary-dark);">
+                <div>
+                    <h1 class="display-3 text-white">ƯU ĐÃI MỚI</h1>
+                    <p class="fs-4">Miễn phí vận chuyển trong bán kính 10km</p>
+                    <a asp-action="Menu" class="btn btn-light btn-lg mt-3">Xem menu</a>
+                </div>
+            </div>
+        </div>
     </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+    </button>
+</div>
+
+<!-- PHẦN 2: 3 DANH MỤC NỔI BẬT -->
+<div class="row g-4 mb-5">
+    @foreach (var category in categories.Take(3))
+    {
+        <div class="col-md-4">
+            <a asp-action="Category" asp-route-id="@category.Id" class="category-tile">
+                <img src="https://placehold.co/600x400/bc9669/ffffff?text=@(Uri.EscapeDataString(category.Name))" alt="@category.Name" />
+                <div class="category-tile-label">@category.Name</div>
+            </a>
+        </div>
+    }
+</div>
+
+<!-- PHẦN 3: LƯỚI SẢN PHẨM NỔI BẬT -->
+<h2 class="text-center mb-4">Menu</h2>
+<div class="row g-4">
+    @foreach (var product in Model)
+    {
+        <div class="col-md-3">
+            <partial name="_ProductCard" model="product" />
+        </div>
+    }
+</div>
+<div class="text-center my-5">
+    <a asp-action="Menu" class="btn btn-primary btn-lg">Xem tất cả</a>
+    <!-- PHẦN 4: COMBO / ƯU ĐÃI -->
+<h2 class="text-center mb-4">Combo &amp; Ưu đãi</h2>
+<div class="row g-3 mb-5">
+    <div class="col-md-8">
+        <a asp-action="Menu" class="combo-tile combo-tile-lg">
+            <img src="https://placehold.co/900x420/9c7a52/ffffff?text=Combo+Sinh+Nhat" alt="Combo sinh nhật" />
+        </a>
+    </div>
+    <div class="col-md-4">
+        <a asp-action="Menu" class="combo-tile combo-tile-lg">
+            <img src="https://placehold.co/450x420/bc9669/ffffff?text=Combo+Tra+Chieu" alt="Combo trà chiều" />
+        </a>
+    </div>
+    <div class="col-md-4">
+        <a asp-action="Menu" class="combo-tile combo-tile-sm">
+            <img src="https://placehold.co/450x300/bc9669/ffffff?text=Combo+Gia+Dinh" alt="Combo gia đình" />
+        </a>
+    </div>
+    <div class="col-md-4">
+        <a asp-action="Menu" class="combo-tile combo-tile-sm">
+            <img src="https://placehold.co/450x300/9c7a52/ffffff?text=Combo+Qua+Tang" alt="Combo quà tặng" />
+        </a>
+    </div>
+    <div class="col-md-4">
+        <a asp-action="Menu" class="combo-tile combo-tile-sm">
+            <img src="https://placehold.co/450x300/3a3229/ffffff?text=Combo+Cuoi+Tuan" alt="Combo cuối tuần" />
+        </a>
+    </div>
+</div>
+
+<!-- PHẦN 5: GIỚI THIỆU NHÀ HÀNG -->
+<section id="about" class="row g-4 align-items-stretch my-5">
+    <div class="col-md-6">
+        <img src="https://placehold.co/700x600/bc9669/ffffff?text=BakeryShop" class="about-img" alt="Về BakeryShop" />
+    </div>
+    <div class="col-md-6 d-flex flex-column justify-content-center">
+        <h2 class="mb-3">Về chúng tôi</h2>
+        <h5 class="text-uppercase mb-3" style="color: var(--color-primary); letter-spacing: 0.08em;">
+            Bánh sẻ chia, trọn cuộc sống
+        </h5>
+        <p>
+            BakeryShop là tiệm bánh ngọt theo phong cách Pháp, nơi kỹ thuật làm bánh tinh tế
+            gặp gỡ hương vị trái cây nhiệt đới Việt Nam. Mỗi chiếc bánh được làm thủ công,
+            từ lớp mousse mịn đến phần nhân tươi mát.
+        </p>
+        <p>
+            Chúng tôi tin rằng một miếng bánh là một lời chia sẻ. Dù là sinh nhật, buổi trà chiều
+            hay một ngày bình thường, bánh của BakeryShop luôn mang đến những khoảnh khắc đáng nhớ.
+        </p>
+        <div>
+            <a asp-action="Menu" class="btn btn-primary">Khám phá menu</a>
+        </div>
+    </div>
+</section>
+
 </div>
