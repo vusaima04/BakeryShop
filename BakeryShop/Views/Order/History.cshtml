@@ -1,0 +1,41 @@
+﻿@model List<BakeryShop.Models.Order>
+
+<div class="container my-5">
+    <h2 class="mb-4">Đơn hàng của tôi</h2>
+
+    @if (!Model.Any())
+    {
+        <p class="text-muted">Bạn chưa có đơn hàng nào.</p>
+        <a asp-controller="Home" asp-action="Menu" class="btn btn-primary">Xem menu</a>
+    }
+    else
+    {
+        <div class="card shadow-sm border-0 p-4 bg-white" style="border-radius: 12px;">
+            <table class="table align-middle mb-0">
+                <thead>
+                    <tr class="text-muted" style="border-bottom: 2px solid var(--color-primary);">
+                        <th>Mã đơn</th>
+                        <th>Ngày đặt</th>
+                        <th>Ngày nhận</th>
+                        <th>Tổng tiền</th>
+                        <th>Trạng thái</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var order in Model)
+                    {
+                        <tr>
+                            <td class="fw-semibold">#@order.Id</td>
+                            <td>@order.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td>@order.ReceiveDate.ToString("dd/MM/yyyy")</td>
+                            <td class="text-danger fw-bold">@order.TotalAmount.ToString("N0") đ</td>
+                            <td><span class="badge @OrderStatus.BadgeClass(order.Status)">@OrderStatus.Label(order.Status)</span></td>
+                            <td><a asp-action="Details" asp-route-id="@order.Id">Chi tiết</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

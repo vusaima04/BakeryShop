@@ -9,10 +9,16 @@
         <li class="nav-item">
             <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity?.Name!</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-controller="Order" asp-action="History">Đơn hàng của tôi</a>
+        </li>
         @if (User.IsInRole("Admin"))
         {
             <li class="nav-item">
                 <a class="nav-link text-dark fw-bold" asp-controller="Products" asp-action="Index">Quản lý</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark fw-bold" asp-controller="AdminOrders" asp-action="Index">Quản lý đơn</a>
             </li>
         }
         <li class="nav-item">
