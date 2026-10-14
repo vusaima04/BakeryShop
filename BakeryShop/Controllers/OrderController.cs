@@ -83,10 +83,44 @@ namespace BakeryShop.Controllers
         // GET: Order/Success -> Trang xác nhận đặt hàng thành công
         public async Task<IActionResult> Success(int id)
         {
+            var userId = _userManager.GetUserId(User);
             var order = await _context.Orders
                 .Include(o => o.OrderDetails)
                 .ThenInclude(od => od.Product)
-                .FirstOrDefaultAsync(o => o.Id == id);
+                .FirstOrDefaultAsync(o => o.Id == id && o.UserId == userId);
+
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            return View(order);
+        }
+        // GET: Order/History -> Danh sách đơn của chính user đang đăng nhập
+        public async Task<IActionResult> History()
+        {
+            var userId = _userManager.GetUserId(User);
+            var orders = await _context.Orders
+                .Where(o => o.UserId == userId)
+                .OrderByDescending(o => o.CreatedAt)
+                .ToListAsync();
+
+            return View(orders);
+        }
+
+        // GET: Order/Details/5 -> Chi tiết 1 đơn của chính user đó
+        public async Task<IActionResult> Details(int id)
+        {
+            var userId = _userManager.GetUserId(User);
+            var order = await _context.Orders
+                .Include(o => o.OrderDetails)
+                .ThenInclude(od => od.Product)
+                .FirstOrDefaultAsync(o => o.Id == id && o.UserId == userId);
+
+            if (order == null)
+            {
+                return NotFound();
+            }
 
             return View(order);
         }
