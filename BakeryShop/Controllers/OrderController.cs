@@ -37,6 +37,7 @@ namespace BakeryShop.Controllers
 
         // POST: Order/PlaceOrder -> Xử lý tạo đơn hàng thật
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> PlaceOrder(string deliveryAddress, string receiverPhone, DateTime receiveDate, string? note)
         {
             var userId = _userManager.GetUserId(User);
@@ -57,7 +58,7 @@ namespace BakeryShop.Controllers
                 ReceiverPhone = receiverPhone,
                 ReceiveDate = receiveDate,
                 Note = note,
-                Status = "Pending",
+                Status = "OrderStatus.Pending",
                 CreatedAt = DateTime.Now,
                 TotalAmount = cartItems.Sum(c => c.Product!.Price * c.Quantity)
             };

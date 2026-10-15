@@ -32,6 +32,7 @@ namespace BakeryShop.Controllers
 
         // POST: Cart/Add -> Thêm sản phẩm vào giỏ
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add(int productId)
         {
             var userId = _userManager.GetUserId(User);
@@ -60,9 +61,13 @@ namespace BakeryShop.Controllers
 
         // POST: Cart/Remove -> Xóa 1 sản phẩm khỏi giỏ
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Remove(int id)
         {
-            var item = await _context.CartItems.FindAsync(id);
+            var userId = _userManager.GetUserId(User);
+            var item = await _context.CartItems
+                .FirstOrDefaultAsync(c => c.Id == id && c.UserId == userId);
+
             if (item != null)
             {
                 _context.CartItems.Remove(item);
