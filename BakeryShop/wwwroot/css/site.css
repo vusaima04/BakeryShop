@@ -93,14 +93,7 @@ form .btn-primary {
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
-/* Khung chứa form đăng nhập/đăng ký cho gọn, có viền/bóng nhẹ */
-main .row .col-md-4,
-main .row .col-md-6 {
-    background-color: white;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-}
+
 .topbar {
     background-color: var(--color-primary);
     color: white;
