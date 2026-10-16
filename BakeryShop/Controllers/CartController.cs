@@ -35,27 +35,28 @@ namespace BakeryShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add(int productId)
         {
-            var userId = _userManager.GetUserId(User);
+            var isAjax = Request.Headers["X-Requested-With"] == "XMLHttpRequest";
+
+            if (!await _context.Products.AnyAsync(p => p.Id == productId))
+                return isAjax ? NotFound(new { success = false, message = "Sản phẩm không tồn tại" }) : NotFound();
+
+            var userId = _userManager.GetUserId(User)!;
 
             var existingItem = await _context.CartItems
                 .FirstOrDefaultAsync(c => c.ProductId == productId && c.UserId == userId);
 
             if (existingItem != null)
-            {
                 existingItem.Quantity += 1;
-            }
             else
-            {
-                var newItem = new CartItem
-                {
-                    ProductId = productId,
-                    UserId = userId!,
-                    Quantity = 1
-                };
-                _context.CartItems.Add(newItem);
-            }
+                _context.CartItems.Add(new CartItem { ProductId = productId, UserId = userId, Quantity = 1 });
 
             await _context.SaveChangesAsync();
+
+            if (isAjax)
+            {
+                var count = await _context.CartItems.Where(c => c.UserId == userId).SumAsync(c => c.Quantity);
+                return Json(new { success = true, cartCount = count });
+            }
             return RedirectToAction("Index", "Home");
         }
 

@@ -168,7 +168,7 @@ form .btn-primary {
 }
 /* ==== Footer ==== */
 .site-footer {
-    background-color: var(--color-text);
+    background: linear-gradient(rgba(58, 50, 41, 0.82), rgba(58, 50, 41, 0.82)), url('/Images/footer.png') center / cover no-repeat;
     color: #f3ebe0;
     margin-top: 4rem;
 }
