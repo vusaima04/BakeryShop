@@ -1,21 +1,77 @@
-﻿@model List<BakeryShop.Models.Category>
+﻿@model List<BakeryShop.Models.Product>
+@{
+    ViewData["Title"] = "Menu";
+    var categories = (List<BakeryShop.Models.Category>)ViewBag.Categories;
+    int page = ViewBag.Page, totalPages = ViewBag.TotalPages;
+}
 
 <div class="container my-5">
-    <h2 class="text-center mb-5">Menu</h2>
+    <h2 class="text-center mb-4">Menu</h2>
 
-    @foreach (var category in Model.Where(c => c.Products.Any()))
-    {
-        <div class="d-flex justify-content-between align-items-end mb-3">
-            <h3 class="mb-0">@category.Name</h3>
-            <a asp-action="Category" asp-route-id="@category.Id">Chỉ xem loại này</a>
+    <form method="get" class="row g-2 mb-4">
+        <div class="col-md-4">
+            <input type="text" name="search" value="@ViewBag.Search" class="form-control" placeholder="Tìm bánh theo tên..." />
         </div>
-        <div class="row g-4 mb-5">
-            @foreach (var product in category.Products)
+        <div class="col-md-3">
+            <select name="categoryId" class="form-select">
+                <option value="">Tất cả danh mục</option>
+                @foreach (var c in categories)
+                {
+                    <option value="@c.Id" selected="@(ViewBag.CategoryId == c.Id)">@c.Name</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-3">
+            <select name="sort" class="form-select">
+                <option value="" selected="@(string.IsNullOrEmpty(ViewBag.Sort))">Sắp xếp: Tên A-Z</option>
+                <option value="price_asc" selected="@(ViewBag.Sort == "price_asc")">Giá tăng dần</option>
+                <option value="price_desc" selected="@(ViewBag.Sort == "price_desc")">Giá giảm dần</option>
+            </select>
+        </div>
+        <div class="col-md-2 d-flex gap-2">
+            <button type="submit" class="btn btn-primary flex-fill">Lọc</button>
+            <a asp-action="Menu" class="btn btn-outline-secondary">Xóa</a>
+        </div>
+    </form>
+
+    <p class="text-muted">Tìm thấy @ViewBag.Total sản phẩm</p>
+
+    @if (!Model.Any())
+    {
+        <p class="text-center text-muted my-5">Không tìm thấy sản phẩm phù hợp.</p>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var product in Model)
             {
-                <div class="col-md-4">
+                <div class="col-md-4 col-sm-6">
                     <partial name="_ProductCard" model="product" />
                 </div>
             }
         </div>
+    }
+
+    @if (totalPages > 1)
+    {
+        <nav class="mt-5">
+            <ul class="pagination justify-content-center">
+                <li class="page-item @(page == 1 ? "disabled" : "")">
+                    <a class="page-link" asp-action="Menu" asp-route-page="@(page - 1)"
+                       asp-route-search="@ViewBag.Search" asp-route-categoryId="@ViewBag.CategoryId" asp-route-sort="@ViewBag.Sort">&laquo;</a>
+                </li>
+                @for (int i = 1; i <= totalPages; i++)
+                {
+                    <li class="page-item @(i == page ? "active" : "")">
+                        <a class="page-link" asp-action="Menu" asp-route-page="@i"
+                           asp-route-search="@ViewBag.Search" asp-route-categoryId="@ViewBag.CategoryId" asp-route-sort="@ViewBag.Sort">@i</a>
+                    </li>
+                }
+                <li class="page-item @(page == totalPages ? "disabled" : "")">
+                    <a class="page-link" asp-action="Menu" asp-route-page="@(page + 1)"
+                       asp-route-search="@ViewBag.Search" asp-route-categoryId="@ViewBag.CategoryId" asp-route-sort="@ViewBag.Sort">&raquo;</a>
+                </li>
+            </ul>
+        </nav>
     }
 </div>

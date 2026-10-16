@@ -45,7 +45,9 @@
     {
         <div class="col-md-4">
             <a asp-action="Category" asp-route-id="@category.Id" class="category-tile">
-                <img src="https://placehold.co/600x400/bc9669/ffffff?text=@(Uri.EscapeDataString(category.Name))" alt="@category.Name" />
+                <img src="/Images/categories/cat-@(category.Id).jpg"
+                     onerror="this.onerror=null;this.src='https://placehold.co/600x400/bc9669/ffffff?text=@(Uri.EscapeDataString(category.Name))'"
+                     alt="@category.Name" />
                 <div class="category-tile-label">@category.Name</div>
             </a>
         </div>
@@ -70,27 +72,27 @@
 <div class="row g-3 mb-5">
     <div class="col-md-8">
         <a asp-action="Menu" class="combo-tile combo-tile-lg">
-            <img src="https://placehold.co/900x420/9c7a52/ffffff?text=Combo+Sinh+Nhat" alt="Combo sinh nhật" />
+            <img src="/Images/Chanh.png" alt="Combo sinh nhật" />
         </a>
     </div>
     <div class="col-md-4">
         <a asp-action="Menu" class="combo-tile combo-tile-lg">
-            <img src="https://placehold.co/450x420/bc9669/ffffff?text=Combo+Tra+Chieu" alt="Combo trà chiều" />
+            <img src="/Images/cobo.png" alt="Combo trà chiều" />
         </a>
     </div>
     <div class="col-md-4">
         <a asp-action="Menu" class="combo-tile combo-tile-sm">
-            <img src="https://placehold.co/450x300/bc9669/ffffff?text=Combo+Gia+Dinh" alt="Combo gia đình" />
+            <img src="/Images/download.png" alt="Combo gia đình" />
         </a>
     </div>
     <div class="col-md-4">
         <a asp-action="Menu" class="combo-tile combo-tile-sm">
-            <img src="https://placehold.co/450x300/9c7a52/ffffff?text=Combo+Qua+Tang" alt="Combo quà tặng" />
+            <img src="/Images/Tira.png" alt="Combo quà tặng" />
         </a>
     </div>
     <div class="col-md-4">
         <a asp-action="Menu" class="combo-tile combo-tile-sm">
-            <img src="https://placehold.co/450x300/3a3229/ffffff?text=Combo+Cuoi+Tuan" alt="Combo cuối tuần" />
+            <img src="/Images/Ảnh.png" alt="Combo cuối tuần" />
         </a>
     </div>
 </div>
