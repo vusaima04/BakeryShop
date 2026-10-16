@@ -38,7 +38,7 @@ namespace BakeryShop.Controllers
         // POST: Order/PlaceOrder -> Xử lý tạo đơn hàng thật
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> PlaceOrder(string deliveryAddress, string receiverPhone, DateTime receiveDate, string? note)
+        public async Task<IActionResult> PlaceOrder(CheckoutViewModel input)
         {
             var userId = _userManager.GetUserId(User);
             var cartItems = await _context.CartItems
@@ -51,14 +51,25 @@ namespace BakeryShop.Controllers
                 return RedirectToAction("Index", "Cart");
             }
 
+            if (input.ReceiveDate.HasValue && input.ReceiveDate.Value.Date < DateTime.Today)
+            {
+                ModelState.AddModelError(nameof(input.ReceiveDate), "Ngày nhận không được ở quá khứ");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Input = input; // giữ lại dữ liệu khách đã nhập
+                return View("Checkout", cartItems);
+            }
+
             var order = new Order
             {
                 UserId = userId!,
-                DeliveryAddress = deliveryAddress,
-                ReceiverPhone = receiverPhone,
-                ReceiveDate = receiveDate,
-                Note = note,
-                Status = "OrderStatus.Pending",
+                DeliveryAddress = input.DeliveryAddress,
+                ReceiverPhone = input.ReceiverPhone,
+                ReceiveDate = input.ReceiveDate!.Value,
+                Note = input.Note,
+                Status = OrderStatus.Pending,
                 CreatedAt = DateTime.Now,
                 TotalAmount = cartItems.Sum(c => c.Product!.Price * c.Quantity)
             };
@@ -74,8 +85,7 @@ namespace BakeryShop.Controllers
             }
 
             _context.Orders.Add(order);
-            _context.CartItems.RemoveRange(cartItems); // Xóa giỏ hàng sau khi đặt xong
-
+            _context.CartItems.RemoveRange(cartItems);
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Success", new { id = order.Id });

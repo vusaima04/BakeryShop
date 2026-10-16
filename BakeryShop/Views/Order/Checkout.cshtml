@@ -1,5 +1,7 @@
 ﻿@model List<BakeryShop.Models.CartItem>
-
+@{
+    var input = ViewBag.Input as CheckoutViewModel;
+}
 <div class="container my-5">
     <h2 class="mb-4">Xác nhận đơn hàng</h2>
 
@@ -8,21 +10,25 @@
             <div class="card shadow-sm border-0 p-4 bg-white" style="border-radius: 12px;">
                 <h4 class="mb-3">Thông tin giao hàng</h4>
                 <form asp-action="PlaceOrder" asp-controller="Order" method="post">
+                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
                     <div class="mb-3">
                         <label class="form-label">Địa chỉ nhận hàng</label>
-                        <input type="text" name="deliveryAddress" class="form-control" required />
+                        <input type="text" name="deliveryAddress" value="@input?.DeliveryAddress" class="form-control" required />
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Số điện thoại</label>
-                        <input type="tel" name="receiverPhone" class="form-control" required />
+                        <input type="tel" name="receiverPhone" value="@input?.ReceiverPhone" class="form-control" required />
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Ngày nhận hàng</label>
-                        <input type="date" name="receiveDate" class="form-control" required />
+                        <input type="date" name="receiveDate"
+                               value="@(input?.ReceiveDate?.ToString("yyyy-MM-dd"))"
+                               min="@(DateTime.Today.ToString("yyyy-MM-dd"))"
+                               class="form-control" required />
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Ghi chú (không bắt buộc)</label>
-                        <textarea name="note" class="form-control"></textarea>
+                        <textarea name="note" class="form-control">@input?.Note</textarea>
                     </div>
                     <button type="submit" class="btn btn-primary btn-lg w-100">Xác nhận đặt hàng</button>
                 </form>
