@@ -1,7 +1,7 @@
-
 using BakeryShop.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 [Authorize(Roles = "Admin")]
@@ -9,38 +9,41 @@ public class ProductsController : Controller
 {
     private readonly ApplicationDbContext _context;
 
-    public ProductsController(ApplicationDbContext context)
+    private readonly IWebHostEnvironment _env;
+
+    public ProductsController(ApplicationDbContext context, IWebHostEnvironment env)
     {
         _context = context;
+        _env = env;
     }
-
+    private async Task LoadCategoriesAsync(int? selectedId = null)
+    {
+        var list = await _context.Categories.AsNoTracking().OrderBy(c => c.Name).ToListAsync();
+        ViewBag.Categories = new SelectList(list, "Id", "Name", selectedId);
+    }
     // GET: PRODUCTS
     public async Task<IActionResult> Index()
     {
-        return View(await _context.Products.ToListAsync());
+        return View(await _context.Products.Include(p => p.Category).ToListAsync());
     }
 
     // GET: PRODUCTS/Details/5
     public async Task<IActionResult> Details(int? id)
     {
-        if (id == null)
-        {
-            return NotFound();
-        }
+        if (id == null) return NotFound();
 
         var product = await _context.Products
+            .Include(p => p.Category)
             .FirstOrDefaultAsync(m => m.Id == id);
-        if (product == null)
-        {
-            return NotFound();
-        }
+        if (product == null) return NotFound();
 
         return View(product);
     }
 
     // GET: PRODUCTS/Create
-    public IActionResult Create()
+    public async Task<IActionResult> Create()
     {
+        await LoadCategoriesAsync();
         return View();
     }
 
@@ -49,30 +52,38 @@ public class ProductsController : Controller
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Id,Name,Description,Price,ImageUrl,Size,CategoryId,Category")] Product product)
+    public async Task<IActionResult> Create([Bind("Id,Name,Description,Price,ImageUrl,Size,CategoryId")] Product product, IFormFile? imageFile)
     {
+        if (imageFile != null && imageFile.Length > 0)
+        {
+            var url = await SaveImageAsync(imageFile);
+            if (url == null)
+                ModelState.AddModelError("ImageUrl", "Ảnh phải là jpg/png/webp/gif và tối đa 2MB");
+            else
+            {
+                product.ImageUrl = url;
+                ModelState.Remove(nameof(Product.ImageUrl));
+            }
+        }
         if (ModelState.IsValid)
         {
             _context.Add(product);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+        await LoadCategoriesAsync(product.CategoryId);
         return View(product);
     }
 
     // GET: PRODUCTS/Edit/5
     public async Task<IActionResult> Edit(int? id)
     {
-        if (id == null)
-        {
-            return NotFound();
-        }
+        if (id == null) return NotFound();
 
         var product = await _context.Products.FindAsync(id);
-        if (product == null)
-        {
-            return NotFound();
-        }
+        if (product == null) return NotFound();
+
+        await LoadCategoriesAsync(product.CategoryId);
         return View(product);
     }
 
@@ -81,11 +92,22 @@ public class ProductsController : Controller
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int? id, [Bind("Id,Name,Description,Price,ImageUrl,Size,CategoryId,Category")] Product product)
+    public async Task<IActionResult> Edit(int id,
+    [Bind("Id,Name,Description,Price,ImageUrl,Size,CategoryId")] Product product,
+    IFormFile? imageFile)
     {
-        if (id != product.Id)
+        if (id != product.Id) return NotFound();
+
+        if (imageFile != null && imageFile.Length > 0)
         {
-            return NotFound();
+            var url = await SaveImageAsync(imageFile);
+            if (url == null)
+                ModelState.AddModelError("ImageUrl", "Ảnh phải là jpg/png/webp/gif và tối đa 2MB");
+            else
+            {
+                product.ImageUrl = url;
+                ModelState.Remove(nameof(Product.ImageUrl));
+            }
         }
 
         if (ModelState.IsValid)
@@ -97,35 +119,13 @@ public class ProductsController : Controller
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ProductExists(product.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                if (!_context.Products.Any(e => e.Id == product.Id)) return NotFound();
+                throw;
             }
             return RedirectToAction(nameof(Index));
         }
-        return View(product);
-    }
 
-    // GET: PRODUCTS/Delete/5
-    public async Task<IActionResult> Delete(int? id)
-    {
-        if (id == null)
-        {
-            return NotFound();
-        }
-
-        var product = await _context.Products
-            .FirstOrDefaultAsync(m => m.Id == id);
-        if (product == null)
-        {
-            return NotFound();
-        }
-
+        await LoadCategoriesAsync(product.CategoryId);
         return View(product);
     }
 
@@ -147,5 +147,18 @@ public class ProductsController : Controller
     private bool ProductExists(int? id)
     {
         return _context.Products.Any(e => e.Id == id);
+    }
+    private async Task<string?> SaveImageAsync(IFormFile file)
+    {
+        var allowed = new[] { ".jpg", ".jpeg", ".png", ".webp", ".gif" };
+        var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
+        if (!allowed.Contains(ext) || file.Length > 2 * 1024 * 1024) return null;
+
+        var folder = Path.Combine(_env.WebRootPath, "Images", "products");
+        Directory.CreateDirectory(folder);
+        var fileName = $"{Guid.NewGuid()}{ext}";
+        using var stream = new FileStream(Path.Combine(folder, fileName), FileMode.Create);
+        await file.CopyToAsync(stream);
+        return "/Images/products/" + fileName;
     }
 }

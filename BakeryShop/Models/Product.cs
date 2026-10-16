@@ -30,6 +30,7 @@ namespace BakeryShop.Models
         [Display(Name = "Kích thước")]
         public string Size { get; set; } = string.Empty;
 
+        [Range(1, int.MaxValue, ErrorMessage = "Vui lòng chọn danh mục")]
         [Display(Name = "Danh mục")]
         public int CategoryId { get; set; }
         public Category? Category { get; set; }
