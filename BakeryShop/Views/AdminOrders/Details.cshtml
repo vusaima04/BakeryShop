@@ -1,7 +1,7 @@
 ﻿@model BakeryShop.Models.Order
 
 <div class="container my-5">
-    <a asp-action="Index">&larr; Quay lại danh sách</a>
+    <a asp-action="Index" class="btn btn-outline-secondary btn-sm">&larr; Quay lại danh sách</a>
     <h2 class="my-3">Đơn hàng #@Model.Id</h2>
 
     <div class="row g-4">
@@ -10,7 +10,11 @@
                 <h4 class="mb-3">Thông tin đơn hàng</h4>
                 <p><strong>Khách hàng:</strong> @(ViewBag.Email ?? "(tài khoản đã xóa)")</p>
                 <p><strong>Số điện thoại:</strong> @Model.ReceiverPhone</p>
-                <p><strong>Địa chỉ giao:</strong> @Model.DeliveryAddress</p>
+                <p>
+                    <strong>
+                        Địa chỉ giao:</stro
+                        <a href="d:\lập trình web\bakeryshop\bakeryshop\views\adminorders\details.cshtml">d:\lập trình web\bakeryshop\bakeryshop\views\adminorders\details.cshtml</a>ng> @Model.DeliveryAddress
+                    </p>
                 <p><strong>Ngày đặt:</strong> @Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")</p>
                 <p><strong>Ngày nhận:</strong> @Model.ReceiveDate.ToString("dd/MM/yyyy")</p>
                 <p><strong>Ghi chú:</strong> @(string.IsNullOrWhiteSpace(Model.Note) ? "Không có" : Model.Note)</p>
