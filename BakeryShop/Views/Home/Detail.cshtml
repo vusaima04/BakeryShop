@@ -1,0 +1,60 @@
+﻿@model BakeryShop.Models.Product
+@{
+    ViewData["Title"] = Model.Name;
+    var related = ViewBag.Related as IEnumerable<BakeryShop.Models.Product> ?? Enumerable.Empty<BakeryShop.Models.Product>();
+    var recent = ViewBag.Recent as IEnumerable<BakeryShop.Models.Product> ?? Enumerable.Empty<BakeryShop.Models.Product>();
+}
+
+<div class="container my-4">
+    <nav class="mb-3 small">
+        <a asp-action="Index">@L["Trang chủ"]</a> /
+        <a asp-action="Menu">Menu</a> /
+        <a asp-action="Category" asp-route-id="@Model.CategoryId">@Model.Category?.Name</a>
+    </nav>
+
+    <div class="row g-5 align-items-start">
+        <div class="col-md-6">
+            <img src="@Model.ImageUrl" alt="@Model.Name" class="detail-img" />
+        </div>
+        <div class="col-md-6">
+            <h1 class="mb-2">@Model.Name</h1>
+            <p class="text-muted">@L["Danh mục"]: @Model.Category?.Name</p>
+            <p class="detail-price">@Model.Price.ToString("N0") đ</p>
+            <p>@Model.Description</p>
+            <p><strong>@L["Kích thước"]:</strong> @Model.Size</p>
+
+            <form asp-controller="Cart" asp-action="Add" method="post" class="js-add-cart d-flex gap-3 align-items-end mt-4">
+                <input type="hidden" name="productId" value="@Model.Id" />
+                <div>
+                    <label class="form-label small mb-1">@L["Số lượng"]</label>
+                    <input type="number" name="quantity" value="1" min="1" max="20" class="form-control" style="width: 90px;" />
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg">@L["Thêm vào giỏ"]</button>
+            </form>
+
+            <a asp-action="Menu" class="btn btn-link mt-3 ps-0">&larr; @L["Quay lại menu"]</a>
+        </div>
+    </div>
+
+    @if (related.Any())
+    {
+        <h3 class="mt-5 mb-4">@L["Sản phẩm liên quan"]</h3>
+        <div class="row g-4">
+            @foreach (var p in related)
+            {
+                <div class="col-md-3"><partial name="_ProductCard" model="p" /></div>
+            }
+        </div>
+    }
+
+    @if (recent.Any())
+    {
+        <h3 class="mt-5 mb-4">@L["Bạn đã xem gần đây"]</h3>
+        <div class="row g-4">
+            @foreach (var p in recent)
+            {
+                <div class="col-md-3"><partial name="_ProductCard" model="p" /></div>
+            }
+        </div>
+    }
+</div>

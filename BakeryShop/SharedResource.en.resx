@@ -36,4 +36,8 @@
   <data name="Xóa" xml:space="preserve"><value>Clear</value></data>
   <data name="Tìm thấy {0} sản phẩm" xml:space="preserve"><value>{0} products found</value></data>
   <data name="Không tìm thấy sản phẩm phù hợp." xml:space="preserve"><value>No matching products found.</value></data>
+	<data name="Số lượng" xml:space="preserve"><value>Quantity</value></data>
+	<data name="Quay lại menu" xml:space="preserve"><value>Back to menu</value></data>
+	<data name="Sản phẩm liên quan" xml:space="preserve"><value>Related products</value></data>
+	<data name="Bạn đã xem gần đây" xml:space="preserve"><value>Recently viewed</value></data>
 </root>

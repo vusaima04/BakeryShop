@@ -33,8 +33,9 @@ namespace BakeryShop.Controllers
         // POST: Cart/Add -> Thêm sản phẩm vào giỏ
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Add(int productId)
+        public async Task<IActionResult> Add(int productId, int quantity = 1)
         {
+            quantity = Math.Clamp(quantity, 1, 20);
             var isAjax = Request.Headers["X-Requested-With"] == "XMLHttpRequest";
 
             if (!await _context.Products.AnyAsync(p => p.Id == productId))
@@ -46,9 +47,9 @@ namespace BakeryShop.Controllers
                 .FirstOrDefaultAsync(c => c.ProductId == productId && c.UserId == userId);
 
             if (existingItem != null)
-                existingItem.Quantity += 1;
+                existingItem.Quantity += quantity;
             else
-                _context.CartItems.Add(new CartItem { ProductId = productId, UserId = userId, Quantity = 1 });
+                _context.CartItems.Add(new CartItem { ProductId = productId, UserId = userId, Quantity = quantity });
 
             await _context.SaveChangesAsync();
 
