@@ -12,9 +12,6 @@ html {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
-/* ==== Import font từ Google Fonts ==== */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Montserrat:wght@400;500;600&display=swap');
-
 /* ==== Biến màu dùng chung (CSS Variables) ==== */
 :root {
     --color-primary: #bc9669; /* Vàng nâu ấm - màu chủ đạo Artemis */
@@ -100,8 +97,11 @@ form .btn-primary {
     font-size: 0.9rem;
 }
 /* Ô danh mục trên trang chủ */
+/* Ô danh mục: ảnh làm nền, chữ nằm đè lên */
 .category-tile {
+    position: relative;
     display: block;
+    height: 280px;
     text-decoration: none;
     border-radius: 12px;
     overflow: hidden;
@@ -115,21 +115,39 @@ form .btn-primary {
     }
 
     .category-tile img {
+        position: absolute;
+        inset: 0;
         width: 100%;
-        height: 260px;
+        height: 100%;
         object-fit: cover;
-        display: block;
+        transition: transform 0.5s ease;
+    }
+
+    .category-tile:hover img {
+        transform: scale(1.08);
+    }
+
+    /* lớp phủ tối dần xuống dưới để chữ dễ đọc */
+    .category-tile::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(58,50,41,.85), rgba(58,50,41,.15) 60%);
     }
 
 .category-tile-label {
-    background-color: var(--color-text);
-    color: white;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    padding: 1.25rem;
+    color: #fff;
     text-align: center;
-    padding: 1rem;
     font-family: 'Playfair Display', serif;
-    font-size: 1.25rem;
+    font-size: 1.4rem;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.08em;
 }
 /* Ô combo trên trang chủ */
 .combo-tile {
@@ -230,3 +248,61 @@ form .btn-primary {
     .footer-social a:hover {
         color: var(--color-primary);
     }
+/* ===== Thanh nav: nền nâu, chữ kiểu Cormorant, hover nền trắng chữ nâu ===== */
+.site-nav {
+    background: linear-gradient(135deg, #5e4630, #7d5d3e);
+    box-shadow: 0 3px 10px rgba(58, 50, 41, .25);
+    padding-top: .35rem;
+    padding-bottom: .35rem;
+}
+
+    .site-nav .navbar-brand {
+        font-family: 'Pacifico', cursive;
+        font-size: 1.7rem;
+        color: #fff;
+    }
+
+    .site-nav .nav-link,
+    .site-nav .btn.nav-link {
+        color: #fdf8f3 !important;
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 0.8rem;
+        font-weight: 700 !important; /* ghi đè fw-bold: mọi mục cùng độ đậm */
+        letter-spacing: .06em;
+        text-transform: uppercase;
+        padding: .45rem 1rem;
+        margin: 0 .15rem;
+        border: 0;
+        border-radius: 999px; /* hình viên thuốc */
+        text-decoration: none;
+        transition: background-color .2s ease, color .2s ease, transform .2s ease;
+    }
+
+        .site-nav .nav-link:hover,
+        .site-nav .nav-link:focus,
+        .site-nav .btn.nav-link:hover,
+        .site-nav .nav-item.show > .nav-link {
+            background-color: #fff;
+            color: #7d5d3e !important;
+            transform: translateY(-1px);
+        }
+
+    .site-nav .dropdown-menu {
+        border: 0;
+        border-radius: 12px;
+        padding: .5rem;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, .18);
+    }
+
+    .site-nav .dropdown-item {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 1.1rem;
+        font-weight: 700;
+        border-radius: 8px;
+        color: #5e4630;
+    }
+
+        .site-nav .dropdown-item:hover {
+            background-color: #7d5d3e;
+            color: #fff;
+        }

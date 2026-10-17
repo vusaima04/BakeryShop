@@ -2,6 +2,15 @@
 @{
     var categories = (ViewBag.Categories as List<BakeryShop.Models.Category>) ?? new List<BakeryShop.Models.Category>();
 }
+@functions {
+    static string CategoryImage(string name) => name switch
+    {
+        "Bánh Sinh Nhật" => "/Images/categories/banh-sn.png",
+        "Bánh Nhỏ"       => "/Images/categories/banh-mini.png",
+        "Bánh Nướng"     => "/Images/categories/banh-nuong.png",
+        _                => "https://placehold.co/600x400/bc9669/ffffff?text=" + Uri.EscapeDataString(name)
+    };
+}
 
 <!-- PHẦN 1: SLIDER -->
 <div id="heroCarousel" class="carousel slide mb-5" data-bs-ride="carousel" style="border-radius: 12px; overflow: hidden;">
@@ -45,9 +54,9 @@
     {
         <div class="col-md-4">
             <a asp-action="Category" asp-route-id="@category.Id" class="category-tile">
-                <img src="/Images/categories/cat-@(category.Id).jpg"
-                     onerror="this.onerror=null;this.src='https://placehold.co/600x400/bc9669/ffffff?text=@(Uri.EscapeDataString(category.Name))'"
-                     alt="@category.Name" />
+                <img src="@CategoryImage(category.Name)"
+     onerror="this.onerror=null;this.src='https://placehold.co/600x400/bc9669/ffffff?text=@(Uri.EscapeDataString(category.Name))'"
+     alt="@category.Name" />
                 <div class="category-tile-label">@category.Name</div>
             </a>
         </div>
@@ -100,7 +109,7 @@
 <!-- PHẦN 5: GIỚI THIỆU NHÀ HÀNG -->
 <section id="about" class="row g-4 align-items-stretch my-5">
     <div class="col-md-6">
-        <img src="https://placehold.co/700x600/bc9669/ffffff?text=BakeryShop" class="about-img" alt="Về BakeryShop" />
+        <img src="/Images/About.png" class="about-img" alt="Về BakeryShop" />
     </div>
     <div class="col-md-6 d-flex flex-column justify-content-center">
         <h2 class="mb-3">Về chúng tôi</h2>
