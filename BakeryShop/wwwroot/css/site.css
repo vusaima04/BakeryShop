@@ -306,3 +306,17 @@ form .btn-primary {
             background-color: #7d5d3e;
             color: #fff;
         }
+/* Trang chi tiết sản phẩm */
+.detail-img {
+    width: 100%;
+    max-height: 480px;
+    object-fit: cover;
+    border-radius: 14px;
+    box-shadow: 0 6px 20px rgba(0,0,0,.1);
+}
+
+.detail-price {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    color: var(--color-primary-dark);
+}

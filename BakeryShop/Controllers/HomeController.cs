@@ -36,7 +36,41 @@ namespace BakeryShop.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
         // GET: Home/Menu -> Trang liệt kê TẤT CẢ sản phẩm, nhóm theo danh mục
-        // GET: Home/Menu?search=&categoryId=&sort=&page=
+        // GET: Home/Detail/5 -> Trang chi tiết sản phẩm cho khách
+        public async Task<IActionResult> Detail(int id)
+        {
+            var product = await _context.Products.AsNoTracking()
+                .Include(p => p.Category)
+                .FirstOrDefaultAsync(p => p.Id == id);
+            if (product == null) return NotFound();
+
+            // SESSION: nhớ các sản phẩm đã xem gần đây (mới nhất đứng đầu, tối đa 7)
+            var viewed = (HttpContext.Session.GetString("RecentlyViewed") ?? "")
+                .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Select(s => int.TryParse(s, out var n) ? n : 0)
+                .Where(n => n > 0)
+                .ToList();
+            viewed.Remove(id);
+            viewed.Insert(0, id);
+            if (viewed.Count > 7) viewed = viewed.Take(7).ToList();
+            HttpContext.Session.SetString("RecentlyViewed", string.Join(',', viewed));
+
+            // Các sản phẩm đã xem trước đó (không tính sản phẩm đang xem)
+            var recentIds = viewed.Where(v => v != id).Take(4).ToList();
+            var recentProducts = await _context.Products.AsNoTracking()
+                .Where(p => recentIds.Contains(p.Id)).ToListAsync();
+            ViewBag.Recent = recentIds
+                .Select(rid => recentProducts.FirstOrDefault(p => p.Id == rid))
+                .Where(p => p != null)
+                .ToList();
+
+            // Sản phẩm cùng danh mục
+            ViewBag.Related = await _context.Products.AsNoTracking()
+                .Where(p => p.CategoryId == product.CategoryId && p.Id != id)
+                .Take(4).ToListAsync();
+
+            return View(product);
+        }
         public async Task<IActionResult> Menu(string? search, int? categoryId, string? sort, int page = 1)
         {
             const int pageSize = 9;

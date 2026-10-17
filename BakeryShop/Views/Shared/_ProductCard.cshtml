@@ -1,9 +1,13 @@
 ﻿@model BakeryShop.Models.Product
 
 <div class="card h-100 shadow-sm">
-    <img src="@Model.ImageUrl" class="card-img-top" alt="@Model.Name" style="height: 220px; object-fit: cover;">
+        <a asp-controller="Home" asp-action="Detail" asp-route-id="@Model.Id">
+        <img src="@Model.ImageUrl" class="card-img-top" alt="@Model.Name" style="height: 220px; object-fit: cover;">
+    </a>
     <div class="card-body d-flex flex-column">
-        <h5 class="card-title">@Model.Name</h5>
+        <h5 class="card-title">
+            <a asp-controller="Home" asp-action="Detail" asp-route-id="@Model.Id" class="text-decoration-none" style="color: var(--color-text);">@Model.Name</a>
+        </h5>
         <p class="card-text text-muted">@Model.Description</p>
         <p class="card-text"><small class="text-muted">@L["Kích thước"]: @Model.Size</small></p>
         <p class="fw-bold text-danger mt-auto">@Model.Price.ToString("N0") đ</p>
