@@ -1,6 +1,68 @@
-﻿@{
-    ViewData["Title"] = "Privacy Policy";
+﻿@using System.Globalization
+@{
+    var en = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "en";
+    ViewData["Title"] = L["Chính sách bảo mật"].Value;
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<div class="policy-page mx-auto" style="max-width: 820px;">
+    <h1 class="text-center mb-4">@ViewData["Title"]</h1>
+
+    @if (en)
+    {
+        <p>BakeryShop respects your privacy. This policy explains what information we collect and how we use it.</p>
+
+        <h4>1. Information we collect</h4>
+        <ul>
+            <li>Account details: full name, email address, password (stored only as a secure hash).</li>
+            <li>Order details: delivery name, phone number, address and the items you order.</li>
+            <li>Technical data: cookies used to keep you signed in, to remember your cart and your language.</li>
+        </ul>
+
+        <h4>2. How we use your information</h4>
+        <ul>
+            <li>To process, prepare and deliver your orders.</li>
+            <li>To contact you about your order when needed.</li>
+            <li>To secure your account and improve our website.</li>
+        </ul>
+
+        <h4>3. Cookies</h4>
+        <p>We use cookies for sign-in, language preference and cart count. You can disable cookies in your browser, but some features may stop working.</p>
+
+        <h4>4. Information sharing</h4>
+        <p>We never sell your personal data. Information is shared only with delivery partners when it is needed to complete your order.</p>
+
+        <h4>5. Your rights</h4>
+        <p>You may view or update your account details, and request deletion of your account, by contacting us at <a href="mailto:lienhe@bakeryshop.com">lienhe@bakeryshop.com</a>.</p>
+
+        <p class="text-muted small mt-4">Last updated: October 2026</p>
+    }
+    else
+    {
+        <p>BakeryShop tôn trọng quyền riêng tư của bạn. Chính sách này giải thích chúng tôi thu thập thông tin gì và sử dụng như thế nào.</p>
+
+        <h4>1. Thông tin chúng tôi thu thập</h4>
+        <ul>
+            <li>Thông tin tài khoản: họ tên, email, mật khẩu (chỉ lưu dưới dạng mã băm an toàn).</li>
+            <li>Thông tin đơn hàng: tên người nhận, số điện thoại, địa chỉ và các sản phẩm bạn đặt.</li>
+            <li>Dữ liệu kỹ thuật: cookie dùng để giữ đăng nhập, ghi nhớ giỏ hàng và ngôn ngữ.</li>
+        </ul>
+
+        <h4>2. Mục đích sử dụng</h4>
+        <ul>
+            <li>Xử lý, chuẩn bị và giao đơn hàng của bạn.</li>
+            <li>Liên hệ với bạn về đơn hàng khi cần thiết.</li>
+            <li>Bảo mật tài khoản và cải thiện website.</li>
+        </ul>
+
+        <h4>3. Cookie</h4>
+        <p>Chúng tôi dùng cookie để đăng nhập, lưu ngôn ngữ và số lượng giỏ hàng. Bạn có thể tắt cookie trong trình duyệt, nhưng một số chức năng có thể không hoạt động.</p>
+
+        <h4>4. Chia sẻ thông tin</h4>
+        <p>Chúng tôi không bán dữ liệu cá nhân. Thông tin chỉ được chia sẻ với đơn vị giao hàng khi cần để hoàn tất đơn.</p>
+
+        <h4>5. Quyền của bạn</h4>
+        <p>Bạn có thể xem, cập nhật thông tin tài khoản hoặc yêu cầu xóa tài khoản bằng cách liên hệ <a href="mailto:lienhe@bakeryshop.com">lienhe@bakeryshop.com</a>.</p>
+
+        <p class="text-muted small mt-4">Cập nhật lần cuối: 10/2026</p>
+    }
+</div>
