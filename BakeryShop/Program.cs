@@ -17,13 +17,37 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LoginPath = "/Identity/Account/Login";
     options.LogoutPath = "/Identity/Account/Logout";
     options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+
+    options.Events.OnRedirectToLogin = ctx =>
+    {
+        if (ctx.Request.Path.StartsWithSegments("/api"))
+            ctx.Response.StatusCode = StatusCodes.Status401Unauthorized;
+        else
+            ctx.Response.Redirect(ctx.RedirectUri);
+        return Task.CompletedTask;
+    };
+    options.Events.OnRedirectToAccessDenied = ctx =>
+    {
+        if (ctx.Request.Path.StartsWithSegments("/api"))
+            ctx.Response.StatusCode = StatusCodes.Status403Forbidden;
+        else
+            ctx.Response.Redirect(ctx.RedirectUri);
+        return Task.CompletedTask;
+    };
 });
 builder.Services.AddTransient<IEmailSender, FakeEmailSender>();
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 builder.Services.AddRazorPages();
 
 var app = builder.Build();
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 using (var scope = app.Services.CreateScope())
 {
@@ -98,6 +122,11 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapControllers();
+app.MapRazorPages();
 app.MapRazorPages();
 
 app.Run();
