@@ -5,11 +5,11 @@
     <div class="card-body d-flex flex-column">
         <h5 class="card-title">@Model.Name</h5>
         <p class="card-text text-muted">@Model.Description</p>
-        <p class="card-text"><small class="text-muted">Size: @Model.Size</small></p>
+        <p class="card-text"><small class="text-muted">@L["Kích thước"]: @Model.Size</small></p>
         <p class="fw-bold text-danger mt-auto">@Model.Price.ToString("N0") đ</p>
         <form asp-controller="Cart" asp-action="Add" method="post" class="js-add-cart">
             <input type="hidden" name="productId" value="@Model.Id" />
-            <button type="submit" class="btn btn-primary w-100">Thêm vào giỏ</button>
+            <button type="submit" class="btn btn-primary w-100">@L["Thêm vào giỏ"]</button>
         </form>
     </div>
 </div>

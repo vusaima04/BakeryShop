@@ -10,11 +10,11 @@
 
     <form method="get" class="row g-2 mb-4">
         <div class="col-md-4">
-            <input type="text" name="search" value="@ViewBag.Search" class="form-control" placeholder="Tìm bánh theo tên..." />
+            <input type="text" name="search" value="@ViewBag.Search" class="form-control" placeholder="@L["Tìm bánh theo tên..."]" />
         </div>
         <div class="col-md-3">
             <select name="categoryId" class="form-select">
-                <option value="">Tất cả danh mục</option>
+                <option value="">@L["Tất cả danh mục"]</option>
                 @foreach (var c in categories)
                 {
                     <option value="@c.Id" selected="@(ViewBag.CategoryId == c.Id)">@c.Name</option>
@@ -23,22 +23,22 @@
         </div>
         <div class="col-md-3">
             <select name="sort" class="form-select">
-                <option value="" selected="@(string.IsNullOrEmpty(ViewBag.Sort))">Sắp xếp: Tên A-Z</option>
-                <option value="price_asc" selected="@(ViewBag.Sort == "price_asc")">Giá tăng dần</option>
-                <option value="price_desc" selected="@(ViewBag.Sort == "price_desc")">Giá giảm dần</option>
+                <option value="" selected="@(string.IsNullOrEmpty(ViewBag.Sort))">@L["Sắp xếp: Tên A-Z"]</option>
+                <option value="price_asc" selected="@(ViewBag.Sort == "price_asc")">@L["Giá tăng dần"]</option>
+                <option value="price_desc" selected="@(ViewBag.Sort == "price_desc")">@L["Giá giảm dần"]</option>
             </select>
         </div>
         <div class="col-md-2 d-flex gap-2">
-            <button type="submit" class="btn btn-primary flex-fill">Lọc</button>
-            <a asp-action="Menu" class="btn btn-outline-secondary">Xóa</a>
+            <button type="submit" class="btn btn-primary flex-fill">@L["Lọc"]</button>
+            <a asp-action="Menu" class="btn btn-outline-secondary">@L["Xoá"]</a>
         </div>
     </form>
 
-    <p class="text-muted">Tìm thấy @ViewBag.Total sản phẩm</p>
+    <p class="text-muted">@string.Format(L["Tìm thấy {0} sản phẩm"].Value, ViewBag.Total)</p>
 
     @if (!Model.Any())
     {
-        <p class="text-center text-muted my-5">Không tìm thấy sản phẩm phù hợp.</p>
+        <p class="text-center text-muted my-5">@L["Không tìm thấy sản phẩm phù hợp."]</p>
     }
     else
     {

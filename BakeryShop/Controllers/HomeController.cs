@@ -1,4 +1,5 @@
 using BakeryShop.Data;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
@@ -85,6 +86,19 @@ namespace BakeryShop.Controllers
             }
 
             return View(category);
+        }
+        // GET: Home/SetLanguage?culture=en-US&returnUrl=/Home/Menu
+        public IActionResult SetLanguage(string culture, string? returnUrl)
+        {
+            var supported = new[] { "vi-VN", "en-US" };
+            if (!supported.Contains(culture)) culture = "vi-VN";
+
+            Response.Cookies.Append(
+                CookieRequestCultureProvider.DefaultCookieName,
+                CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
+                new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1), IsEssential = true });
+
+            return LocalRedirect(Url.IsLocalUrl(returnUrl) ? returnUrl! : "/");
         }
     }
 
