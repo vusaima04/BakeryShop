@@ -99,6 +99,7 @@ using (var scope = app.Services.CreateScope())
             FullName = "Quản trị viên",
             EmailConfirmed = true
         };
+        var adminPassword = builder.Configuration["AdminSeed:Password"] ?? "Admin@123456";
         var result = await userManager.CreateAsync(admin, "Admin@123456");
         if (result.Succeeded)
         {
