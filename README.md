@@ -9,7 +9,7 @@ Bài tập lớn học phần **Lập trình web** (ASP.NET Core MVC). BakerySho
 - Xem trang chủ, menu sản phẩm; tìm kiếm theo tên, lọc theo danh mục, sắp xếp theo giá, phân trang
 - Xem chi tiết sản phẩm, sản phẩm liên quan, **sản phẩm đã xem gần đây** (lưu bằng Session)
 - Đăng ký, đăng nhập, quản lý tài khoản (ASP.NET Core Identity), khóa tài khoản tạm thời khi đăng nhập sai nhiều lần
-- Thêm vào giỏ hàng bằng **AJAX** (không tải lại trang), chọn số lượng, xóa món khỏi giỏ
+- Thêm vào giỏ hàng bằng **AJAX** (không tải lại trang), chọn số lượng, đổi số lượng ngay trong giỏ (nút +, − hoặc nhập số), xóa món khỏi giỏ
 - Đặt hàng (địa chỉ, số điện thoại, ngày nhận, ghi chú), xem lịch sử và chi tiết đơn hàng
 - Chuyển đổi ngôn ngữ **Tiếng Việt / English** (lưu bằng Cookie)
 
