@@ -2,8 +2,6 @@
 
 Bài tập lớn học phần **Lập trình web** (ASP.NET Core MVC). BakeryShop là website giới thiệu và bán bánh ngọt kiểu Pháp trực tuyến, gồm phần dành cho **khách hàng** (xem menu, đặt hàng) và phần dành cho **quản trị viên** (quản lý sản phẩm, danh mục, đơn hàng, thống kê).
 
-> Nhóm thực hiện: *(điền họ tên, MSSV các thành viên)* - Giảng viên: *(điền)*
-
 ## 1. Chức năng chính
 
 **Khách vãng lai / khách hàng**
