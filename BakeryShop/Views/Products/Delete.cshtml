@@ -35,8 +35,9 @@
 
         <form asp-action="Delete">
             <input type="hidden" asp-for="Id" />
+            <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
             <button type="submit" class="btn btn-danger">Xóa</button>
-            <a asp-action="Index" class="btn btn-outline-secondary">Quay lại</a>
+            <a href="@((string?)ViewBag.ReturnUrl ?? Url.Action("Index"))" class="btn btn-outline-secondary">Quay lại</a>
         </form>
     </div>
 </div>

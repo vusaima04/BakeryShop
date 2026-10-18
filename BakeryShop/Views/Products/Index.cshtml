@@ -8,9 +8,21 @@
     var returnUrl = Context.Request.Path + Context.Request.QueryString;
 }
 <h1>Quản lý sản phẩm</h1>
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
 
 <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
     <a asp-action="Create" class="btn btn-primary">Thêm sản phẩm</a>
+    <form asp-action="CleanupImages" method="post" class="d-inline"
+          onsubmit="return confirm('Xóa các ảnh thừa không còn sản phẩm nào dùng?');">
+        <button type="submit" class="btn btn-outline-secondary">Dọn ảnh thừa</button>
+    </form>
     <form method="get" class="d-flex flex-wrap gap-2 ms-auto">
         <input name="search" value="@ViewBag.Search" class="form-control" style="width: 220px;" placeholder="Tìm theo tên..." />
         <select name="categoryId" class="form-select" style="width: 190px;">
@@ -73,7 +85,7 @@
                 <td class="text-nowrap">
                     <a asp-action="Edit" asp-route-id="@item.Id" asp-route-returnUrl="@returnUrl" class="btn btn-sm btn-outline-primary">Sửa</a>
                     <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">Chi tiết</a>
-                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Xóa</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" asp-route-returnUrl="@returnUrl" class="btn btn-sm btn-outline-danger">Xóa</a>
                 </td>
             </tr>
         }

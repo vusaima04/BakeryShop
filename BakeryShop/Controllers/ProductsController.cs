@@ -76,25 +76,29 @@ public class ProductsController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create([Bind("Id,Name,Description,Price,ImageUrl,Size,CategoryId")] Product product, IFormFile? imageFile)
     {
-        if (imageFile != null && imageFile.Length > 0)
+        var hasNewImage = imageFile != null && imageFile.Length > 0;
+        if (hasNewImage)
         {
-            var url = await SaveImageAsync(imageFile);
-            if (url == null)
+            if (!IsValidImage(imageFile!))
                 ModelState.AddModelError("ImageUrl", "Ảnh phải là jpg/png/webp/gif và tối đa 2MB");
             else
-            {
-                product.ImageUrl = url;
-                ModelState.Remove(nameof(Product.ImageUrl));
-            }
+                ModelState.Remove(nameof(Product.ImageUrl));   // link ảnh sẽ được gán sau khi form hợp lệ
         }
         if (ModelState.IsValid)
         {
+            if (hasNewImage) product.ImageUrl = (await SaveImageAsync(imageFile!))!;
             _context.Add(product);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
         await LoadCategoriesAsync(product.CategoryId);
         return View(product);
+    }
+    private static bool IsValidImage(IFormFile file)
+    {
+        var allowed = new[] { ".jpg", ".jpeg", ".png", ".webp", ".gif" };
+        var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
+        return allowed.Contains(ext) && file.Length <= 2 * 1024 * 1024;
     }
 
     // GET: PRODUCTS/Edit/5
@@ -122,22 +126,21 @@ public class ProductsController : Controller
         if (id != product.Id) return NotFound();
         var oldUrl = await _context.Products.AsNoTracking()
     .Where(p => p.Id == id).Select(p => p.ImageUrl).FirstOrDefaultAsync();
-        if (imageFile != null && imageFile.Length > 0)
+        var hasNewImage = imageFile != null && imageFile.Length > 0;
+        if (hasNewImage)
         {
-            var url = await SaveImageAsync(imageFile);
-            if (url == null)
+            if (!IsValidImage(imageFile!))
                 ModelState.AddModelError("ImageUrl", "Ảnh phải là jpg/png/webp/gif và tối đa 2MB");
             else
-            {
-                product.ImageUrl = url;
-                ModelState.Remove(nameof(Product.ImageUrl));
-            }
+                ModelState.Remove(nameof(Product.ImageUrl));   // link ảnh sẽ được gán sau khi form hợp lệ
         }
 
         if (ModelState.IsValid)
         {
+
             try
             {
+                if (hasNewImage) product.ImageUrl = (await SaveImageAsync(imageFile!))!;
                 _context.Update(product);
                 await _context.SaveChangesAsync();
                 if (oldUrl != product.ImageUrl) await DeleteImageIfUnusedAsync(oldUrl);
@@ -153,21 +156,39 @@ public class ProductsController : Controller
         await LoadCategoriesAsync(product.CategoryId);
         return View(product);
     }
+    // GET: PRODUCTS/Delete/5
+    public async Task<IActionResult> Delete(int? id, string? returnUrl)
+    {
+        if (id == null) return NotFound();
+        var product = await _context.Products.AsNoTracking()
+            .Include(p => p.Category).FirstOrDefaultAsync(p => p.Id == id);
+        if (product == null) return NotFound();
 
+        ViewBag.ReturnUrl = returnUrl;
+        return View(product);
+    }
     // POST: PRODUCTS/Delete/5
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeleteConfirmed(int? id)
+    public async Task<IActionResult> DeleteConfirmed(int id, string? returnUrl)
     {
+        IActionResult Back() => Url.IsLocalUrl(returnUrl) ? LocalRedirect(returnUrl!) : RedirectToAction(nameof(Index));
+
         var product = await _context.Products.FindAsync(id);
-        if (product != null)
+        if (product == null) return Back();
+
+        // Không xóa sản phẩm đã có trong đơn hàng để giữ lịch sử đơn
+        if (await _context.OrderDetails.AnyAsync(d => d.ProductId == id))
         {
-            _context.Products.Remove(product);
+            TempData["Error"] = $"Không thể xóa '{product.Name}' vì sản phẩm đã có trong đơn hàng.";
+            return Back();
         }
 
+        _context.Products.Remove(product);
         await _context.SaveChangesAsync();
-        if (product != null) await DeleteImageIfUnusedAsync(product.ImageUrl);
-        return RedirectToAction(nameof(Index));
+        await DeleteImageIfUnusedAsync(product.ImageUrl);
+        TempData["Success"] = $"Đã xóa '{product.Name}'.";
+        return Back();
     }
 
     private bool ProductExists(int? id)
@@ -195,5 +216,30 @@ public class ProductsController : Controller
 
         var path = Path.Combine(_env.WebRootPath, "Images", "products", Path.GetFileName(url));
         if (System.IO.File.Exists(path)) System.IO.File.Delete(path);
+
+    }
+    // POST: PRODUCTS/CleanupImages
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> CleanupImages()
+    {
+        var used = (await _context.Products.Select(p => p.ImageUrl).ToListAsync())
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var folder = Path.Combine(_env.WebRootPath, "Images", "products");
+        var removed = 0;
+        if (Directory.Exists(folder))
+        {
+            foreach (var file in Directory.GetFiles(folder))
+            {
+                var isGuidName = Guid.TryParse(Path.GetFileNameWithoutExtension(file), out _);
+                if (isGuidName && !used.Contains("/Images/products/" + Path.GetFileName(file)))
+                {
+                    System.IO.File.Delete(file);
+                    removed++;
+                }
+            }
+        }
+        TempData["Success"] = $"Đã dọn {removed} ảnh không còn được dùng.";
+        return RedirectToAction(nameof(Index));
     }
 }
