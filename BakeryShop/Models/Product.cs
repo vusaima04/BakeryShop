@@ -20,7 +20,7 @@ namespace BakeryShop.Models
         [Display(Name = "Giá")]
         public decimal Price { get; set; }
 
-        [Required(ErrorMessage = "Vui lòng nhập link ảnh")]
+        [Required(ErrorMessage = "Vui lòng chọn ảnh sản phẩm")]
         [StringLength(500, ErrorMessage = "Link ảnh tối đa 500 ký tự")]
         [Display(Name = "Link ảnh")]
         public string ImageUrl { get; set; } = string.Empty;
