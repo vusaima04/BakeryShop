@@ -60,7 +60,22 @@ namespace BakeryShop.Controllers
             }
             return RedirectToAction("Index", "Home");
         }
+        // POST: Cart/Update -> Đổi số lượng 1 dòng trong giỏ
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Update(int id, int quantity, int delta = 0)
+        {
+            var userId = _userManager.GetUserId(User);
+            var item = await _context.CartItems
+                .FirstOrDefaultAsync(c => c.Id == id && c.UserId == userId);
 
+            if (item != null)
+            {
+                item.Quantity = Math.Clamp(quantity + delta, 1, 20);
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToAction("Index");
+        }
         // POST: Cart/Remove -> Xóa 1 sản phẩm khỏi giỏ
         [HttpPost]
         [ValidateAntiForgeryToken]

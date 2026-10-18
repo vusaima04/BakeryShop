@@ -27,7 +27,17 @@
                         <tr>
                             <td class="fw-semibold">@item.Product?.Name</td>
                             <td>@item.Product?.Price.ToString("N0") đ</td>
-                            <td>@item.Quantity</td>
+                            <td>
+    <form asp-action="Update" asp-controller="Cart" method="post" class="d-inline-flex align-items-center gap-1">
+        <input type="hidden" name="id" value="@item.Id" />
+        <button type="submit" name="delta" value="-1" class="btn btn-sm btn-outline-secondary" disabled="@(item.Quantity <= 1)" aria-label="Giảm">&minus;</button>
+        <input type="number" name="quantity" value="@item.Quantity" min="1" max="20"
+               class="form-control form-control-sm text-center" style="width:64px"
+               onchange="this.form.submit()"
+               onkeydown="if (event.key === 'Enter') { event.preventDefault(); this.form.submit(); }" />
+        <button type="submit" name="delta" value="1" class="btn btn-sm btn-outline-secondary" disabled="@(item.Quantity >= 20)" aria-label="Tăng">+</button>
+    </form>
+</td>
                             <td class="text-danger fw-bold">@((item.Product?.Price * item.Quantity)?.ToString("N0")) đ</td>
                             <td>
                                 <form asp-action="Remove" asp-controller="Cart" method="post">

@@ -70,8 +70,6 @@ public class ProductsController : Controller
     }
 
     // POST: PRODUCTS/Create
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create([Bind("Id,Name,Description,Price,ImageUrl,Size,CategoryId")] Product product, IFormFile? imageFile)
@@ -114,9 +112,6 @@ public class ProductsController : Controller
     }
 
     // POST: PRODUCTS/Edit/5
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-
-
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(int id,
@@ -208,7 +203,7 @@ public class ProductsController : Controller
         await file.CopyToAsync(stream);
         return "/Images/products/" + fileName;
     }
-    // Xóa file ảnh cũ nếu nó nằm trong Images/products và không còn sản phẩm nào dùng
+    // Xóa file ảnh cũ 
     private async Task DeleteImageIfUnusedAsync(string? url)
     {
         if (string.IsNullOrEmpty(url) || !url.StartsWith("/Images/products/")) return;

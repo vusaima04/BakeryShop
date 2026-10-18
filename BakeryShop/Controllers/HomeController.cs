@@ -49,7 +49,7 @@ namespace BakeryShop.Controllers
                 .FirstOrDefaultAsync(p => p.Id == id);
             if (product == null) return NotFound();
 
-            // SESSION: nhớ các sản phẩm đã xem gần đây (mới nhất đứng đầu, tối đa 7)
+            // SESSION: nhớ các sản phẩm đã xem gần đây 
             var viewed = (HttpContext.Session.GetString("RecentlyViewed") ?? "")
                 .Split(',', StringSplitOptions.RemoveEmptyEntries)
                 .Select(s => int.TryParse(s, out var n) ? n : 0)
