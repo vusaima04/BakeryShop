@@ -1,0 +1,43 @@
+﻿@using System.Text.Json
+@{
+    ViewData["Title"] = "Thống kê";
+    string J(object o) => JsonSerializer.Serialize(o);
+}
+
+<div class="container my-4">
+    <h2 class="mb-4">Thống kê</h2>
+
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-lg-3"><div class="stat-card"><div class="stat-label">Doanh thu</div><div class="stat-value">@(((decimal)ViewBag.TotalRevenue).ToString("N0")) đ</div></div></div>
+        <div class="col-6 col-lg-3"><div class="stat-card"><div class="stat-label">Đơn hàng</div><div class="stat-value">@ViewBag.TotalOrders</div></div></div>
+        <div class="col-6 col-lg-3"><div class="stat-card"><div class="stat-label">Sản phẩm</div><div class="stat-value">@ViewBag.TotalProducts</div></div></div>
+        <div class="col-6 col-lg-3"><div class="stat-card"><div class="stat-label">Tài khoản</div><div class="stat-value">@ViewBag.TotalUsers</div></div></div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-8"><div class="chart-box"><h5>Doanh thu 6 tháng gần nhất</h5><canvas id="revChart"></canvas></div></div>
+        <div class="col-lg-4"><div class="chart-box"><h5>Đơn theo trạng thái</h5><canvas id="statusChart"></canvas></div></div>
+        <div class="col-12"><div class="chart-box"><h5>Top 5 sản phẩm bán chạy</h5><canvas id="topChart" height="90"></canvas></div></div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script>
+        const brown = '#bc9669', dark = '#7d5d3e';
+        new Chart(document.getElementById('revChart'), {
+            type: 'bar',
+            data: { labels: @Html.Raw(J(ViewBag.MonthLabels)), datasets: [{ label: 'Doanh thu (đ)', data: @Html.Raw(J(ViewBag.MonthRevenue)), backgroundColor: brown }] },
+            options: { plugins: { legend: { display: false } } }
+        });
+        new Chart(document.getElementById('statusChart'), {
+            type: 'doughnut',
+            data: { labels: @Html.Raw(J(ViewBag.StatusLabels)), datasets: [{ data: @Html.Raw(J(ViewBag.StatusCounts)), backgroundColor: ['#f0ad4e', '#5bc0de', '#5cb85c', '#9aa0a6'] }] }
+        });
+        new Chart(document.getElementById('topChart'), {
+            type: 'bar',
+            data: { labels: @Html.Raw(J(ViewBag.TopNames)), datasets: [{ label: 'Số lượng đã bán', data: @Html.Raw(J(ViewBag.TopQty)), backgroundColor: dark }] },
+            options: { indexAxis: 'y', plugins: { legend: { display: false } } }
+        });
+    </script>
+}

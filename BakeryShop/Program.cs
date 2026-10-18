@@ -77,7 +77,7 @@ using (var scope = app.Services.CreateScope())
     }
 
     // Danh mục + sản phẩm mẫu: chỉ thêm những gì còn thiếu
-    await SeedData.SeedCatalogAsync(context);
+    await SeedData.SeedCatalogAsync(context, app.Environment.WebRootPath);
     // Tài khoản Admin mặc định (dùng để demo)
     const string adminEmail = "admin@bakeryshop.com";
     if (await userManager.FindByEmailAsync(adminEmail) == null)

@@ -15,6 +15,9 @@
         @if (User.IsInRole("Admin"))
         {
             <li class="nav-item">
+    <a class="nav-link text-dark fw-bold" asp-controller="Dashboard" asp-action="Index">Thống kê</a>
+</li>
+            <li class="nav-item">
                 <a class="nav-link text-dark fw-bold" asp-controller="Products" asp-action="Index">@L["Quản lý"]</a>
             </li>
             <li class="nav-item">

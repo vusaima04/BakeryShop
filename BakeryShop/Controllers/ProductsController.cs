@@ -22,9 +22,31 @@ public class ProductsController : Controller
         ViewBag.Categories = new SelectList(list, "Id", "Name", selectedId);
     }
     // GET: PRODUCTS
-    public async Task<IActionResult> Index()
+    // GET: PRODUCTS?search=&categoryId=&page=
+    public async Task<IActionResult> Index(string? search, int? categoryId, int page = 1)
     {
-        return View(await _context.Products.Include(p => p.Category).ToListAsync());
+        const int pageSize = 10;
+        if (page < 1) page = 1;
+
+        var query = _context.Products.AsNoTracking().Include(p => p.Category).AsQueryable();
+        if (!string.IsNullOrWhiteSpace(search))
+            query = query.Where(p => p.Name.Contains(search));
+        if (categoryId > 0)
+            query = query.Where(p => p.CategoryId == categoryId);
+
+        var total = await query.CountAsync();
+        var totalPages = Math.Max(1, (int)Math.Ceiling(total / (double)pageSize));
+        if (page > totalPages) page = totalPages;
+
+        var items = await query.OrderBy(p => p.Id).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+
+        ViewBag.Categories = await _context.Categories.AsNoTracking().OrderBy(c => c.Name).ToListAsync();
+        ViewBag.Search = search;
+        ViewBag.CategoryId = categoryId;
+        ViewBag.Page = page;
+        ViewBag.TotalPages = totalPages;
+        ViewBag.Total = total;
+        return View(items);
     }
 
     // GET: PRODUCTS/Details/5

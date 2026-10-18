@@ -19,9 +19,14 @@ namespace BakeryShop.Controllers
 
         public async Task<IActionResult> Index()
         {
-            ViewBag.Categories = await _context.Categories.ToListAsync();
+            ViewBag.Categories = await _context.Categories.AsNoTracking()
+                .Where(c => c.Name != SeedData.ComboCategory).OrderBy(c => c.Id).ToListAsync();
 
-            var featured = await _context.Products.Take(4).ToListAsync();
+            ViewBag.Combos = await _context.Products.AsNoTracking()
+                .Where(p => p.Category!.Name == SeedData.ComboCategory).OrderBy(p => p.Id).ToListAsync();
+
+            var featured = await _context.Products.AsNoTracking()
+                .Where(p => p.Category!.Name != SeedData.ComboCategory).Take(4).ToListAsync();
             return View(featured);
         }
 

@@ -1,3 +1,4 @@
+@import url('site.css');
 html {
   font-size: 14px;
 }
@@ -319,4 +320,94 @@ form .btn-primary {
     font-family: 'Playfair Display', serif;
     font-size: 1.8rem;
     color: var(--color-primary-dark);
+}
+/* Thẻ combo */
+.combo-card {
+    background: #fff;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,.08);
+    transition: transform .25s, box-shadow .25s;
+    height: 100%;
+}
+
+    .combo-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 12px 24px rgba(188,150,105,.25);
+    }
+
+.combo-img-wrap {
+    position: relative;
+    display: block;
+    overflow: hidden;
+}
+
+    .combo-img-wrap img {
+        width: 100%;
+        height: 230px;
+        object-fit: cover;
+        display: block;
+        transition: transform .4s;
+    }
+
+.combo-card:hover .combo-img-wrap img {
+    transform: scale(1.06);
+}
+
+.combo-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: #c0392b;
+    color: #fff;
+    font-size: .75rem;
+    font-weight: 600;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    padding: .25rem .7rem;
+    border-radius: 999px;
+}
+
+.combo-body {
+    padding: 1rem 1.1rem 1.2rem;
+}
+
+    .combo-body h5 a {
+        color: var(--color-text);
+        text-decoration: none;
+        font-family: 'Playfair Display', serif;
+    }
+
+.combo-price {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #c0392b;
+}
+.stat-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 1.2rem 1.4rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,.06);
+    border-left: 5px solid var(--color-primary);
+}
+
+.stat-label {
+    color: #8a7f72;
+    font-size: .85rem;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+}
+
+.stat-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    color: var(--color-text);
+}
+
+.chart-box {
+    background: #fff;
+    border-radius: 14px;
+    padding: 1.2rem 1.4rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,.06);
+    height: 100%;
 }
