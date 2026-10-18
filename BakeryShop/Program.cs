@@ -39,7 +39,14 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 builder.Services.AddTransient<IEmailSender, FakeEmailSender>();
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options =>
+{
+    var msg = options.ModelBindingMessageProvider;
+    msg.SetValueMustBeANumberAccessor(name => $"{name} phải là một số");
+    msg.SetAttemptedValueIsInvalidAccessor((value, name) => $"Giá trị '{value}' không hợp lệ cho {name}");
+    msg.SetValueIsInvalidAccessor(value => $"Giá trị '{value}' không hợp lệ");
+    msg.SetMissingKeyOrValueAccessor(() => "Vui lòng nhập giá trị");
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddRazorPages();
