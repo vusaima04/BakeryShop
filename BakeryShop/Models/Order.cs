@@ -11,7 +11,7 @@
         public string? Note { get; set; }
 
         public decimal TotalAmount { get; set; }
-        public string Status { get; set; } = "Pending"; // Pending, Confirmed, Delivered...
+        public string Status { get; set; } = "Pending"; // Pending, Confirme
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
