@@ -97,7 +97,7 @@ using (var scope = app.Services.CreateScope())
             EmailConfirmed = true
         };
         var adminPassword = builder.Configuration["AdminSeed:Password"] ?? "Admin@123456";
-        var result = await userManager.CreateAsync(admin, "Admin@123456");
+        var result = await userManager.CreateAsync(admin, adminPassword);
         if (result.Succeeded)
         {
             await userManager.AddToRolesAsync(admin, new[] { "Admin", "Customer" });
