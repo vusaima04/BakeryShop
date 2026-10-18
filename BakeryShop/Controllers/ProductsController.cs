@@ -98,28 +98,30 @@ public class ProductsController : Controller
     }
 
     // GET: PRODUCTS/Edit/5
-    public async Task<IActionResult> Edit(int? id)
+    public async Task<IActionResult> Edit(int? id, string? returnUrl)
     {
         if (id == null) return NotFound();
-
         var product = await _context.Products.FindAsync(id);
         if (product == null) return NotFound();
 
+        ViewBag.ReturnUrl = returnUrl;
         await LoadCategoriesAsync(product.CategoryId);
         return View(product);
     }
 
     // POST: PRODUCTS/Edit/5
     // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
+
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(int id,
     [Bind("Id,Name,Description,Price,ImageUrl,Size,CategoryId")] Product product,
-    IFormFile? imageFile)
+    IFormFile? imageFile, string? returnUrl)
     {
         if (id != product.Id) return NotFound();
-
+        var oldUrl = await _context.Products.AsNoTracking()
+    .Where(p => p.Id == id).Select(p => p.ImageUrl).FirstOrDefaultAsync();
         if (imageFile != null && imageFile.Length > 0)
         {
             var url = await SaveImageAsync(imageFile);
@@ -138,15 +140,16 @@ public class ProductsController : Controller
             {
                 _context.Update(product);
                 await _context.SaveChangesAsync();
+                if (oldUrl != product.ImageUrl) await DeleteImageIfUnusedAsync(oldUrl);
             }
             catch (DbUpdateConcurrencyException)
             {
                 if (!_context.Products.Any(e => e.Id == product.Id)) return NotFound();
                 throw;
             }
-            return RedirectToAction(nameof(Index));
+            return Url.IsLocalUrl(returnUrl) ? LocalRedirect(returnUrl!) : RedirectToAction(nameof(Index));
         }
-
+        ViewBag.ReturnUrl = returnUrl;
         await LoadCategoriesAsync(product.CategoryId);
         return View(product);
     }
@@ -163,6 +166,7 @@ public class ProductsController : Controller
         }
 
         await _context.SaveChangesAsync();
+        if (product != null) await DeleteImageIfUnusedAsync(product.ImageUrl);
         return RedirectToAction(nameof(Index));
     }
 
@@ -182,5 +186,14 @@ public class ProductsController : Controller
         using var stream = new FileStream(Path.Combine(folder, fileName), FileMode.Create);
         await file.CopyToAsync(stream);
         return "/Images/products/" + fileName;
+    }
+    // Xóa file ảnh cũ nếu nó nằm trong Images/products và không còn sản phẩm nào dùng
+    private async Task DeleteImageIfUnusedAsync(string? url)
+    {
+        if (string.IsNullOrEmpty(url) || !url.StartsWith("/Images/products/")) return;
+        if (await _context.Products.AnyAsync(p => p.ImageUrl == url)) return;
+
+        var path = Path.Combine(_env.WebRootPath, "Images", "products", Path.GetFileName(url));
+        if (System.IO.File.Exists(path)) System.IO.File.Delete(path);
     }
 }
