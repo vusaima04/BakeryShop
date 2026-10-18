@@ -6,9 +6,21 @@
 
 <h1>Quản lý sản phẩm</h1>
 
-<p>
+<div class="d-flex flex-wrap gap-2 align-items-center mb-3">
     <a asp-action="Create" class="btn btn-primary">Thêm sản phẩm</a>
-</p>
+    <form method="get" class="d-flex flex-wrap gap-2 ms-auto">
+        <input name="search" value="@ViewBag.Search" class="form-control" style="width: 220px;" placeholder="Tìm theo tên..." />
+        <select name="categoryId" class="form-select" style="width: 190px;">
+            <option value="">Tất cả danh mục</option>
+            @foreach (var c in (List<BakeryShop.Models.Category>)ViewBag.Categories)
+            {
+                <option value="@c.Id" selected="@(ViewBag.CategoryId == c.Id)">@c.Name</option>
+            }
+        </select>
+        <button class="btn btn-outline-secondary">Lọc</button>
+    </form>
+</div>
+<p class="text-muted">Tìm thấy @ViewBag.Total sản phẩm</p>
 <table class="table align-middle">
     <thead>
         <tr>
@@ -64,3 +76,17 @@
         }
     </tbody>
 </table>
+@if ((int)ViewBag.TotalPages > 1)
+{
+    <nav>
+        <ul class="pagination justify-content-center">
+            @for (var i = 1; i <= (int)ViewBag.TotalPages; i++)
+            {
+                <li class="page-item @(i == (int)ViewBag.Page ? "active" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-page="@i"
+                       asp-route-search="@ViewBag.Search" asp-route-categoryId="@ViewBag.CategoryId">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
+}

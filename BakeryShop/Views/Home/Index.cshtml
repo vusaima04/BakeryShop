@@ -76,36 +76,35 @@
 <div class="text-center my-5">
     <a asp-action="Menu" class="btn btn-primary btn-lg">Xem tất cả</a>
     </div>
-    <!-- PHẦN 4: COMBO / ƯU ĐÃI -->
-<h2 class="text-center mb-4">Combo &amp; Ưu đãi</h2>
-<div class="row g-3 mb-5">
-    <div class="col-md-8">
-        <a asp-action="Menu" class="combo-tile combo-tile-lg">
-            <img src="/Images/Chanh.png" alt="Combo sinh nhật" />
-        </a>
+@{ var combos = ViewBag.Combos as List<BakeryShop.Models.Product> ?? new(); }
+@if (combos.Any())
+{
+    <h2 class="text-center mb-4">Combo &amp; Ưu đãi</h2>
+    <div class="row g-4 mb-5">
+        @foreach (var combo in combos)
+        {
+            <div class="col-md-6 col-lg-4">
+                <div class="combo-card">
+                    <a asp-action="Detail" asp-route-id="@combo.Id" class="combo-img-wrap">
+                        <img src="@combo.ImageUrl" alt="@combo.Name" />
+                        <span class="combo-badge">Combo</span>
+                    </a>
+                    <div class="combo-body">
+                        <h5><a asp-action="Detail" asp-route-id="@combo.Id">@combo.Name</a></h5>
+                        <p class="text-muted small mb-2">@combo.Description</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="combo-price">@combo.Price.ToString("N0") đ</span>
+                            <form asp-controller="Cart" asp-action="Add" method="post" class="js-add-cart">
+                                <input type="hidden" name="productId" value="@combo.Id" />
+                                <button type="submit" class="btn btn-primary btn-sm">@L["Thêm vào giỏ"]</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
     </div>
-    <div class="col-md-4">
-        <a asp-action="Menu" class="combo-tile combo-tile-lg">
-            <img src="/Images/cobo.png" alt="Combo trà chiều" />
-        </a>
-    </div>
-    <div class="col-md-4">
-        <a asp-action="Menu" class="combo-tile combo-tile-sm">
-            <img src="/Images/download.png" alt="Combo gia đình" />
-        </a>
-    </div>
-    <div class="col-md-4">
-        <a asp-action="Menu" class="combo-tile combo-tile-sm">
-            <img src="/Images/Tira.png" alt="Combo quà tặng" />
-        </a>
-    </div>
-    <div class="col-md-4">
-        <a asp-action="Menu" class="combo-tile combo-tile-sm">
-            <img src="/Images/Ảnh.png" alt="Combo cuối tuần" />
-        </a>
-    </div>
-</div>
-
+}
 <!-- PHẦN 5: GIỚI THIỆU NHÀ HÀNG -->
 <section id="about" class="row g-4 align-items-stretch my-5">
     <div class="col-md-6">
